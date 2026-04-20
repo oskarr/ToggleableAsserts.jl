@@ -59,8 +59,26 @@ Stacktrace:
  [1] top-level scope at REPL[21]:1
 ```
 
+### Debug levels
+
+`@toggled_assert` remains as a compatibility alias for `@dassert 1`. For graded assertions, use `toggle(level)`:
+
+```julia
+using ToggleableAsserts
+
+toggle(0)
+@dassert 1 false  # inactive
+toggle(1)
+@dassert 1 false  # active
+@dassert 2 false  # inactive
+toggle(2)
+@dassert 2 false  # active
+```
+
+`toggle(false)` still disables assertions, and `toggle(true)` enables all debug levels for backwards compatibility.
+
 ### Safety
-If you try to set `toggle` outside of the global scope, you may suffer world-age issues until you return to the global scope. e.g.
+If you try to set the debug level with `toggle` outside of the global scope, you may suffer world-age issues until you return to the global scope. e.g.
 ```julia
 julia> function bar()
            toggle(false)

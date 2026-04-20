@@ -3,8 +3,8 @@ language: julia
 os:
   - linux
 julia:
-  - 1.0
-  - 1.2
+  - 1.10 # (or last LTS)
+  - 1.12
   - nightly
 
 matrix:

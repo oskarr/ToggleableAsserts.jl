@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Test on Julia ${{ matrix.julia }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        julia: [lts, 1, nightly]
+    continue-on-error: ${{ matrix.julia == 'nightly' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Julia
+        uses: julia-actions/setup-julia@v3
+        with:
+          version: ${{ matrix.julia }}
+
+      - name: Install dependencies
+        run: julia --project=. -e "using Pkg; Pkg.instantiate(); Pkg.precompile()"
+
+      - name: Run tests
+        run: julia --project=. -e "using Pkg; Pkg.test()"
