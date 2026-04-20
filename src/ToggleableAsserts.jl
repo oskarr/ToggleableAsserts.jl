@@ -45,6 +45,8 @@ end
     assert_toggle() -> Bool
 
 Return whether assertions are currently enabled.
+Note that assertions may be enabled at different levels, and that this only checks that the level is greater than 0.
+See also `assertionlevel()`.
 """
 assert_toggle() = assertionlevel() > 0
 
@@ -60,13 +62,13 @@ function toggle(level::Int)
         @eval ToggleableAsserts assertionlevel() = $level
         @info "Toggleable asserts debug level set to $level."
     end
-    return nothing
 end
 
 """
     toggle(enable::Bool) -> Nothing
 
-Enable or disable assertions using the legacy boolean API.
+Enable or disable assertions using the (legacy) boolean API.
+Equivalent to `toggle(typemax(Int))` and `toggle(0)` for `true` and `false` respectively.
 """
 function toggle(enable::Bool)::Nothing
     lock(toggle_lock) do
